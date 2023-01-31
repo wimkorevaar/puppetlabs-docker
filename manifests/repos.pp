@@ -13,6 +13,7 @@ class docker::repos (
   $key_source       = $docker::package_key_source,
   $key_check_source = $docker::package_key_check_source,
   $architecture     = $facts['os']['architecture'],
+  $yumrepo_enabled  = $docker::yumrepo_enabled,
 ) {
   ensure_packages($docker::prerequired_packages)
 
@@ -72,11 +73,13 @@ class docker::repos (
         $baseurl      = $location
         $gpgkey       = $key_source
         $gpgkey_check = $key_check_source
+        $enabled      = $yumrepo_enabled
 
         if ($docker::use_upstream_package_source) {
           yumrepo { 'docker':
             descr    => 'Docker',
             baseurl  => $baseurl,
+            enabled  => $enabled,
             gpgkey   => $gpgkey,
             gpgcheck => $gpgkey_check,
           }
